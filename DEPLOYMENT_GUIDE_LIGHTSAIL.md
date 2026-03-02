@@ -27,19 +27,18 @@ Because we built the architecture specifically for Docker, this process is incre
 
 ---
 
-## Phase 2: Uploading the Files
+## Phase 2: Cloning the Repository
 
-We need to get the `docker_48h_forecast` folder from your Windows PC onto the new Linux server.
+We will use Git to securely download the code onto the Linux server.
 
-1. **Get the SSH Key:**
-   - On the Lightsail Instance Connect tab, you can click "Connect using SSH" to open a browser terminal, but to transfer files, download your default SSH key pair from the Lightsail Account page (Account -> SSH keys -> Download default key).
-2. **Transfer via SCP (or Git):**
-   - Open Command Prompt or PowerShell on your local Windows PC.
-   - Use the `scp` command to securely copy the folder, replacing `<YOUR_KEY.pem>` and `<PUBLIC_IP>` with your actual files:
+1. **SSH into the Server:**
+   - On the Lightsail Instance Connect tab, click "Connect using SSH" to open a browser terminal.
+2. **Clone the Project:**
+   - Run the following command in the Ubuntu terminal, replacing `<YOUR_GITHUB_REPO_URL>` with your actual repository link:
      ```bash
-     scp -i <YOUR_KEY.pem> -r C:\Users\DELL\Desktop\TEMP(imd)\docker_48h_forecast ubuntu@<PUBLIC_IP>:~/
+     git clone <YOUR_GITHUB_REPO_URL>
      ```
-   - *Alternative:* You can upload the folder to a private GitHub repository, SSH into the Lightsail server via the browser terminal, and `git clone` the repository.
+   - *Note: If your repo is private, GitHub will prompt you for your Username and a Personal Access Token (PAT) as the password.*
 
 ---
 

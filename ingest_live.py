@@ -33,22 +33,23 @@ def fetch_api_data(start_date: str, end_date: str) -> pd.DataFrame:
 
 def run_single_ingest():
     """Performs one single API fetch and CSV update cycle."""
-    # Load existing live file to find the latest timestamp we have
+    today = datetime.now()
     if os.path.exists(config.LOCAL_CSV):
         df_live = pd.read_csv(config.LOCAL_CSV)
         df_live['TimeStamp'] = pd.to_datetime(df_live['TimeStamp'])
         last_ts = df_live['TimeStamp'].max()
+        start_date = (today - timedelta(days=1)).strftime("%d-%m-%Y")
     else:
-        print("No CSV found. Creating new empty live file.")
+        print("No CSV found. Bootstrapping the last 15 days of live data...")
         df_live = pd.DataFrame()
-        last_ts = datetime.now() - timedelta(days=2)  # bootstrap last 48 hours
+        last_ts = today - timedelta(days=15)  # bootstrap last 15 days
+        start_date = last_ts.strftime("%d-%m-%Y")
 
-    today = datetime.now()
-    yesterday = today - timedelta(days=1)
+    end_date = today.strftime("%d-%m-%Y")
     
     df_api = fetch_api_data(
-        start_date=yesterday.strftime("%d-%m-%Y"),
-        end_date=today.strftime("%d-%m-%Y"),
+        start_date=start_date,
+        end_date=end_date,
     )
 
     if not df_api.empty:
