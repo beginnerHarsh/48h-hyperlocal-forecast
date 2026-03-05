@@ -57,18 +57,28 @@ sudo usermod -aG docker ubuntu
 ```
 *(You may need to log out and log back in for the `usermod` user privileges to apply).*
 
-**2. Navigate into the Project Folder:**
+**2. Enable Swap Space (Crucial for $5 / 512MB RAM Plan):**
+Heavy data-science libraries like `pandas` and `scikit-learn` require more than 512MB of RAM to install. We must allocate a 1GB "Virtual RAM" swap file to prevent the server from crashing during the build:
 ```bash
-cd ~/docker_48h_forecast
+sudo fallocate -l 1G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo sh -c 'echo "/swapfile none swap sw 0 0" >> /etc/fstab'
 ```
 
-**3. Build the Docker Image:**
+**3. Navigate into the Project Folder:**
+```bash
+cd ~/48h-hyperlocal-forecast
+```
+
+**4. Build the Docker Image:**
 This tells Docker to download Python, install `pandas/scikit-learn/fastapi`, and securely package the entire microservice.
 ```bash
-docker build -t 48h-forecast-engine .
+sudo docker build -t 48h-forecast-engine .
 ```
 
-**4. Run the Container in the Background:**
+**5. Run the Container in the Background:**
 This single command Boots the background `ingest_live.py` daemon, the `api.py` endpoint, and the `app.py` stream-lit dashboard entirely headless.
 ```bash
 docker run -d --name forecast-active -p 8501:8501 -p 8000:8000 --restart unless-stopped 48h-forecast-engine
