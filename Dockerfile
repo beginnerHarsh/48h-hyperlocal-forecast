@@ -2,7 +2,8 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-
+# Set timezone for Python datetime.now() to Indian Standard Time 
+ENV TZ="Asia/Kolkata"
 
 # Install python dependencies
 COPY requirements.txt .
